@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/prisma"
+}
+
+model User {
+  id String @id @default(uuid()) 
+  userName String 
+  email String @unique
+  password String 
+  role Role @default(VIEWER)
+  status  Status @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /*
+    a financial records need to know two things as 
+    who created it 
+    who last updated it
+    so below are the relations for them
+  */
+  createdRecords FinancialRecord[] @relation("RecordCreator")
+  updatedRecords FinancialRecord[] @relation("RecordUpdater")
+  
+}
+
+model FinancialRecord {
+  id String @id @default(uuid())
+  amount Float
+  description String?
+  category String
+  date DateTime
+  type Type 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  //foreign keys
+  createdById String
+  udpatedById String?
+
+  // relations 
+  creator User @relation("RecordCreator" , fields: [createdById], references: [id])
+  updatedBy User? @relation("RecordUpdater", fields: [udpatedById], references: [id])
+
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum Role {
+  VIEWER
+  ANALYST
+  ADMIN
+}
+
+enum Type {
+  INCOME 
+  EXPENSE
+}
+
+datasource db {
+  provider = "postgresql"
+}
