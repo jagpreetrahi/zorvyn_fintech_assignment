@@ -1,6 +1,5 @@
-export const SuccessResponse = {
+export const SuccessResponse = (message : string, data : any) =>({
     success: true,
-    message: 'Successfully completed',
-    data: {} ,
-    error: {} 
-}
+    message,
+    data
+})

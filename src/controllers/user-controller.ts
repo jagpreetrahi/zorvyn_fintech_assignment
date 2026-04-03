@@ -10,29 +10,17 @@ async function  signUp(req: Request, res: Response) {
             email : req.body.email,
             password : req.body.password
         })
-        SuccessResponse.message = "User created Successfully"
-        SuccessResponse.data = user;
-     
-        
         return res
                 .status(StatusCodes.CREATED)
-                .json(SuccessResponse);
+                .json(SuccessResponse("User created successfully", user));
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
         return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
 }
 
@@ -42,30 +30,18 @@ async function signIn(req: Request, res : Response) {
             email : req.body.email,
             password : req.body.password
         })
-        SuccessResponse.message = "User signed In Successfully"
-        SuccessResponse.data  = user;
-      
-
         return res
               .status(StatusCodes.OK)
-              .json(SuccessResponse)
+              .json(SuccessResponse("User signed In Successfully", user))
 
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
-        return res
+      return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
     
 }
@@ -76,29 +52,17 @@ async function updateUserRole (req: Request, res: Response) {
             req.body.id,
             req.body.role
         )
-        SuccessResponse.message = 'User role updated successfully'
-        SuccessResponse.data = user;
-
-
         return res
                .status(StatusCodes.OK)
-               .json(SuccessResponse)
+               .json(SuccessResponse( 'User role updated successfully', user))
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
         return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
 }
 
@@ -108,87 +72,52 @@ async function updateUserStatus(req: Request, res: Response) {
             req.body.id, 
             req.body.status
         )
-        SuccessResponse.message = 'User status updated successfully'
-        SuccessResponse.data = user;
- 
-
+      
         return res
                .status(StatusCodes.OK)
-               .json(SuccessResponse)
+               .json(SuccessResponse( 'User status updated successfully', user))
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
         return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
 }
 
 async function  getUser(req: Request, res: Response) {
     try {
         const user = await UserService.getUser(req.params.id as string)
-
-        SuccessResponse.message = 'User fetched successfully'
-        SuccessResponse.data = user
-
         return res
                .status(StatusCodes.OK)
-               .json(SuccessResponse)
+               .json(SuccessResponse('User fetched successfully', user))
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
         return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
 }
 
-async function  getAllUsers(req: Request, res: Response) {
+async function  getAllUsers(_req: Request, res: Response) {
     try {
         const user = await UserService.getAllUsers();
-
-        SuccessResponse.message = 'Users fetched successfully'
-        SuccessResponse.data = user
-
         return res
                .status(StatusCodes.OK)
-               .json(SuccessResponse)
+               .json(SuccessResponse('Users fetched successfully', user))
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError 
-        ? error.message          
-        : 'Something went wrong' 
-
-        ErrorResponse.error = error instanceof Error
-        ? { message : error.message}
-        : { message: 'Unknown error' }
-
         return res
             .status(
                 error instanceof AppError
                 ? error.statusCode
                 : StatusCodes.INTERNAL_SERVER_ERROR 
             )
-            .json(ErrorResponse)
+            .json(ErrorResponse(error instanceof AppError ? error.message : "Something went wrong", error))
     }
 }
 

@@ -1,6 +1,5 @@
-export const ErrorResponse = {
+export const ErrorResponse = (message : string, error: any) => ({
     success: false,
-    message: 'Something went wrong',
-    data: {},
-    error: {} 
-}
+    message,
+    error : error instanceof Error ? { message: error.message } : { message: 'Unknown error' }
+})
