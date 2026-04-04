@@ -113,8 +113,8 @@ Every new user who signs up is assigned `VIEWER` by default. The first admin is 
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/api/auth/signup` | Public | Create a new user |
-| POST | `/api/auth/signin` | Public | Sign in and get JWT token |
+| POST | `/api/v1/auth/signup` | Public | Create a new user |
+| POST | `/api/v1/auth/signin` | Public | Sign in and get JWT token |
 
 **Signup body:**
 ```json
@@ -141,10 +141,10 @@ All routes below require `Authorization: Bearer <token>` header.
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/api/users` | ADMIN | Get all users |
-| GET | `/api/users/:id` | All roles | Get a single user |
-| PATCH | `/api/users/:id/role` | ADMIN | Update user role |
-| PATCH | `/api/users/:id/status` | ADMIN | Activate or deactivate user |
+| GET | `/api/v1/users` | ADMIN | Get all users |
+| GET | `/api/v1/users/:id` | All roles | Get a single user |
+| PATCH | `/api/v1/users/:id/role` | ADMIN | Update user role |
+| PATCH | `/api/v1/users/:id/status` | ADMIN | Activate or deactivate user |
 
 **Update role body:**
 ```json
@@ -168,12 +168,12 @@ All routes require auth token. Create, update, delete are restricted to ADMIN on
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/api/records` | ADMIN | Create a record |
-| GET | `/api/records` | All roles | Get all records |
-| GET | `/api/records/:id` | All roles | Get a single record |
-| PUT | `/api/records/:id` | ADMIN | Update a record |
-| DELETE | `/api/records/:id` | ADMIN | Delete a record |
-| GET | `/api/records/filter` | ANALYST, ADMIN | Filter records |
+| POST | `/api/v1/records` | ADMIN | Create a record |
+| GET | `/api/v1/records` | All roles | Get all records |
+| GET | `/api/v1/records/:id` | All roles | Get a single record |
+| PUT | `/api/v1/records/:id` | ADMIN | Update a record |
+| DELETE | `/api/v1/records/:id` | ADMIN | Delete a record |
+| GET | `/api/v1/records/filter` | ANALYST, ADMIN | Filter records |
 
 **Create record body:**
 ```json
@@ -199,10 +199,10 @@ All routes require auth. ANALYST and ADMIN only.
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/dashboard/summary` | Total income, expenses, net balance |
-| GET | `/api/dashboard/category-totals` | Category wise breakdown |
-| GET | `/api/dashboard/recent-activity` | Last 10 records |
-| GET | `/api/dashboard/monthly-trends` | Month wise income and expense totals |
+| GET | `/api/v1/dashboard/summary` | Total income, expenses, net balance |
+| GET | `/api/v1/dashboard/category-totals` | Category wise breakdown |
+| GET | `/api/v1/dashboard/recent-activity` | Last 10 records |
+| GET | `/api/v1/dashboard/monthly-trends` | Month wise income and expense totals |
 
 **Sample summary response:**
 ```json
@@ -277,10 +277,3 @@ Having two relations from `FinancialRecord` to `User` (creator and updater) caus
 
 ---
 
-## Running in Development
-
-```bash
-npm run dev
-```
-
-Uses `ts-node` to run TypeScript directly without compiling. No need to run `tsc` manually during development.
