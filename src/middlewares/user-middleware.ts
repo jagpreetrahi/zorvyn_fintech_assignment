@@ -6,24 +6,21 @@ import { Auth } from "../utils/common";
 import UserRepository from "../repositories/user-repositories";
 import { JwtPayload } from "jsonwebtoken";
 
+
 const userRepo = new UserRepository();
 
 
 function validateAuthRequest(req: Request, res: Response, next: NextFunction) {
     if(!req.body.email) {
-        ErrorResponse.message = 'Something went wrong while authenticating user';
-        ErrorResponse.error = new AppError('Email not found in the incoming request in the correct form', StatusCodes.BAD_REQUEST);
         return res
             .status(StatusCodes.BAD_REQUEST)
-            .json(ErrorResponse);
+            .json(ErrorResponse('Something went wrong while authenticating user',new AppError('Email not found in the incoming request in the correct form', StatusCodes.BAD_REQUEST)));
     }
 
     if(!req.body.password) {
-        ErrorResponse.message = 'Something went wrong while authenticating user';
-        ErrorResponse.error = new AppError('password not found in the incoming request in the correct form', StatusCodes.BAD_REQUEST);
         return res
             .status(StatusCodes.BAD_REQUEST)
-            .json(ErrorResponse);
+            .json(ErrorResponse('Something went wrong while authenticating user', new AppError('Password not found in the incoming request in the correct form', StatusCodes.BAD_REQUEST)));
     }
 
     next()
@@ -45,7 +42,7 @@ async function checkAuth(req: Request, res: Response, next: NextFunction) {
 
         const user = await userRepo.get(decoded.id) 
         if(!user) {
-            throw new AppError("user not found", StatusCodes.NOT_FOUND)
+            throw new AppError("User not found", StatusCodes.NOT_FOUND)
         }
 
         if(user.status === 'INACTIVE') {
@@ -56,21 +53,13 @@ async function checkAuth(req: Request, res: Response, next: NextFunction) {
         next()
 
     } catch (error) {
-        ErrorResponse.message = error instanceof AppError
-        ? error.message
-        : 'Something went wrong'
-
-        ErrorResponse.error = error instanceof Error
-        ? { message: error.message }
-        : { message: 'Unknown error' }
-        
         return res
         .status(
             error instanceof AppError
             ? error.statusCode
             : StatusCodes.INTERNAL_SERVER_ERROR
         )
-        .json(ErrorResponse)
+        .json(ErrorResponse(error instanceof AppError ? error.message : 'Something went wrong', error))
     }
 }
 
@@ -79,9 +68,7 @@ async function checkAuth(req: Request, res: Response, next: NextFunction) {
 function restrictTo(...roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     if(!roles.includes(req.user.role)) {
-        ErrorResponse.message = 'You do not have permission to perform this action'
-           ErrorResponse.error = { message: 'Forbidden - insufficient role' }
-        return res.status(StatusCodes.FORBIDDEN).json(ErrorResponse)
+        return res.status(StatusCodes.FORBIDDEN).json(ErrorResponse('You do not have permission to perform this action', new AppError('Forbidden - insufficient role', StatusCodes.FORBIDDEN)))
     }
     next()
   }
