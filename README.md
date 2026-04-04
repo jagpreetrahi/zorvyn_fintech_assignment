@@ -31,6 +31,7 @@ src/
   prisma/
     schema.prisma  → database schema
     migrations/    → migration history
+    seed.ts → seeding database
 generated/
   prisma/          → generated Prisma client
 prisma.config.ts   → Prisma v7 config file
@@ -274,6 +275,16 @@ TypeScript expects `expiresIn` to be of type `StringValue` from the `ms` package
 
 **`updatedById` named relation conflict**
 Having two relations from `FinancialRecord` to `User` (creator and updater) caused a Prisma ambiguity error. Fixed by using named relations — `@relation("RecordCreator")` and `@relation("RecordUpdater")` — on both sides of each relation.
+
+**`PrismaClient` initialization error with Prisma v7**
+When running the seed script, Prisma threw a `PrismaClientInitializationError` saying 
+the client needs to be constructed with valid options. Initially tried passing 
+`datasourceUrl` directly to `PrismaClient` but it did not work as expected with 
+Prisma v7 and Supabase. The fix was to use a driver adapter — created a connection 
+pool using `pg` and passed it as an adapter object to `PrismaClient`. Prisma v7 
+separates the CLI config (`prisma.config.ts`) from the runtime client, meaning the 
+client does not read the config file at runtime and needs the connection handled 
+explicitly through an adapter.
 
 ---
 
